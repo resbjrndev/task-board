@@ -3,10 +3,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/db';
 import { getDeviceId, errorResponse } from '@/lib/api-helpers';
 
-interface Board {
-  id: string;
-}
-
 interface Task {
   id: string;
   column_id: string;
@@ -61,8 +57,9 @@ export async function POST(req: NextRequest) {
     );
 
     return NextResponse.json({ task: taskResult.rows[0] });
-  } catch (e: any) {
+  } catch (e: unknown) {
+    const error = e as Error;
     console.error('Create task error:', e);
-    return errorResponse(e?.message ?? 'Database error', 500);
+    return errorResponse(error?.message ?? 'Database error', 500);
   }
 }

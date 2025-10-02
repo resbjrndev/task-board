@@ -9,7 +9,7 @@ const pool = new Pool({
 
 export async function query<T extends QueryResultRow = QueryResultRow>(
   text: string,
-  params?: any[]
+  params?: unknown[]
 ): Promise<QueryResult<T>> {
   const client = await pool.connect();
   try {

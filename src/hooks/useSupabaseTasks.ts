@@ -64,9 +64,10 @@ export function useSupabaseTasks() {
       }))
 
       setBoardData({ columns, tasks })
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as Error;
       console.error('Error fetching data:', err)
-      setError(err.message || 'Failed to load data')
+      setError(error.message || 'Failed to load data')
     } finally {
       setLoading(false)
     }
@@ -103,9 +104,10 @@ export function useSupabaseTasks() {
           tasks: [...prev.tasks, newTask]
         }))
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as Error;
       console.error('Error adding task:', err)
-      setError(err.message || 'Failed to add task')
+      setError(error.message || 'Failed to add task')
     }
   }
 
@@ -115,7 +117,7 @@ export function useSupabaseTasks() {
    */
   const updateTask = async (taskId: string, updates: Partial<Task>) => {
     try {
-      const dbUpdates: any = {}
+      const dbUpdates: Record<string, unknown> = {}
       if (updates.title !== undefined) dbUpdates.title = updates.title
       if (updates.columnId !== undefined) dbUpdates.column_id = updates.columnId
       if (updates.position !== undefined) dbUpdates.position = updates.position
@@ -136,9 +138,10 @@ export function useSupabaseTasks() {
             : task
         )
       }))
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as Error;
       console.error('Error updating task:', err)
-      setError(err.message || 'Failed to update task')
+      setError(error.message || 'Failed to update task')
     }
   }
 
@@ -160,9 +163,10 @@ export function useSupabaseTasks() {
         ...prev,
         tasks: prev.tasks.filter(task => task.id !== taskId)
       }))
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as Error;
       console.error('Error deleting task:', err)
-      setError(err.message || 'Failed to delete task')
+      setError(error.message || 'Failed to delete task')
     }
   }
 

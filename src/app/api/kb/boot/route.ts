@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
 
   try {
     // Ensure board exists
-    let boardResult = await query<Board>(
+    const boardResult = await query<Board>(
       'SELECT * FROM kb_boards WHERE device_id = $1',
       [deviceId]
     );
@@ -107,8 +107,9 @@ export async function GET(req: NextRequest) {
       columns,
       tasksByColumn
     });
-  } catch (e: any) {
+  } catch (e: unknown) {
+    const error = e as Error;
     console.error('Boot error:', e);
-    return errorResponse(e?.message ?? 'Database error', 500);
+    return errorResponse(error?.message ?? 'Database error', 500);
   }
 }

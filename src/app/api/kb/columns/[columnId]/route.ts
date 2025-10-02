@@ -60,9 +60,10 @@ export async function PATCH(
     );
 
     return NextResponse.json({ column: result.rows[0] });
-  } catch (e: any) {
+  } catch (e: unknown) {
+    const error = e as Error;
     console.error('Update column error:', e);
-    return errorResponse(e?.message ?? 'Database error', 500);
+    return errorResponse(error?.message ?? 'Database error', 500);
   }
 }
 
@@ -88,8 +89,9 @@ export async function DELETE(
     await query('DELETE FROM kb_columns WHERE id = $1', [columnId]);
 
     return NextResponse.json({ success: true });
-  } catch (e: any) {
+  } catch (e: unknown) {
+    const error = e as Error;
     console.error('Delete column error:', e);
-    return errorResponse(e?.message ?? 'Database error', 500);
+    return errorResponse(error?.message ?? 'Database error', 500);
   }
 }

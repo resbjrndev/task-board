@@ -21,7 +21,6 @@ import { Column as ColumnType, Task } from '@/types/board'
 import { BoardData } from '@/lib/initial-data'
 import { useDroppable } from '@dnd-kit/core'              // Makes element droppable
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable' // Enables sorting
-import { cn } from '@/utils/cn'                             // Utility for conditional classes
 import SortableTaskCard from './SortableTaskCard'
 import { kbApi } from '@/lib/kbApi'
 

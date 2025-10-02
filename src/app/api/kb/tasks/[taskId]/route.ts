@@ -54,7 +54,7 @@ export async function PATCH(
 
     // Build update query dynamically based on provided fields
     const updates: string[] = [];
-    const values: any[] = [];
+    const values: unknown[] = [];
     let paramCount = 1;
 
     if (title !== undefined) {
@@ -95,9 +95,10 @@ export async function PATCH(
     const result = await query<Task>(updateQuery, values);
 
     return NextResponse.json({ task: result.rows[0] });
-  } catch (e: any) {
+  } catch (e: unknown) {
+    const error = e as Error;
     console.error('Update task error:', e);
-    return errorResponse(e?.message ?? 'Database error', 500);
+    return errorResponse(error?.message ?? 'Database error', 500);
   }
 }
 
@@ -123,8 +124,9 @@ export async function DELETE(
     await query('DELETE FROM kb_tasks WHERE id = $1', [taskId]);
 
     return NextResponse.json({ success: true });
-  } catch (e: any) {
+  } catch (e: unknown) {
+    const error = e as Error;
     console.error('Delete task error:', e);
-    return errorResponse(e?.message ?? 'Database error', 500);
+    return errorResponse(error?.message ?? 'Database error', 500);
   }
 }

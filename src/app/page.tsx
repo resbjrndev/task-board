@@ -36,7 +36,7 @@ export default function Home() {
     kbApi.boot()
       .then((data) => {
         // Transform API response to match BoardData format
-        const allTasks = Object.values(data.tasksByColumn).flat().map((task: any) => ({
+        const allTasks = Object.values(data.tasksByColumn).flat().map((task: { id: string; title: string; description: string | null; column_id: string; position: number }) => ({
           id: task.id,
           title: task.title,
           description: task.description,

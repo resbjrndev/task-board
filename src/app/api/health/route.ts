@@ -6,7 +6,8 @@ export async function GET() {
   try {
     const r = await query<{ now: string }>('select now()::text as now');
     return NextResponse.json({ ok: true, db_time: r.rows[0].now });
-  } catch (e: any) {
-    return NextResponse.json({ ok: false, error: e?.message ?? 'unknown' }, { status: 500 });
+  } catch (e: unknown) {
+    const error = e as Error;
+    return NextResponse.json({ ok: false, error: error?.message ?? 'unknown' }, { status: 500 });
   }
 }

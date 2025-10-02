@@ -79,8 +79,9 @@ export async function GET(req: NextRequest) {
       columns,
       tasksByColumn
     });
-  } catch (e: any) {
+  } catch (e: unknown) {
+    const error = e as Error;
     console.error('Get board error:', e);
-    return errorResponse(e?.message ?? 'Database error', 500);
+    return errorResponse(error?.message ?? 'Database error', 500);
   }
 }

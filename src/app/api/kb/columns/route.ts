@@ -55,8 +55,9 @@ export async function POST(req: NextRequest) {
     );
 
     return NextResponse.json({ column: columnResult.rows[0] });
-  } catch (e: any) {
+  } catch (e: unknown) {
+    const error = e as Error;
     console.error('Create column error:', e);
-    return errorResponse(e?.message ?? 'Database error', 500);
+    return errorResponse(error?.message ?? 'Database error', 500);
   }
 }
