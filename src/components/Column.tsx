@@ -76,19 +76,19 @@ export default function Column({ column, tasks, boardData, setBoardData }: Colum
 
     // Update UI immediately
     const previousData = { ...boardData };
-    setBoardData({
-      ...boardData,
-      tasks: [...boardData.tasks, tempTask],
-    });
+    setBoardData(prev => ({
+      ...prev,
+      tasks: [...prev.tasks, tempTask],
+    }));
 
     try {
       // Persist to API
       const response = await kbApi.createTask(column.id, title);
 
       // Replace temp task with real task from API
-      setBoardData({
-        ...boardData,
-        tasks: boardData.tasks.map(t =>
+      setBoardData(prev => ({
+        ...prev,
+        tasks: prev.tasks.map(t =>
           t.id === tempId
             ? {
                 id: response.task.id,
@@ -99,7 +99,7 @@ export default function Column({ column, tasks, boardData, setBoardData }: Colum
               }
             : t
         ),
-      });
+      }));
     } catch (err) {
       console.error('Failed to create task:', err);
       // Rollback on error
@@ -187,10 +187,10 @@ export default function Column({ column, tasks, boardData, setBoardData }: Colum
               onDelete={async () => {
                 // Optimistic delete: remove from UI immediately
                 const previousData = { ...boardData };
-                setBoardData({
-                  ...boardData,
-                  tasks: boardData.tasks.filter(t => t.id !== task.id)
-                });
+                setBoardData(prev => ({
+                  ...prev,
+                  tasks: prev.tasks.filter(t => t.id !== task.id)
+                }));
 
                 try {
                   // Persist to API
