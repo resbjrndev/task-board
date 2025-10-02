@@ -37,7 +37,7 @@ import { kbApi } from '@/lib/kbApi'
 // Props interface - defines what data this component receives
 interface BoardProps {
   boardData: BoardData                    // Current state of board (tasks + columns)
-  setBoardData: (data: BoardData) => void // Function to update board state
+  setBoardData: (data: BoardData | ((prev: BoardData) => BoardData)) => void // Function to update board state
 }
 
 export default function Board({ boardData, setBoardData }: BoardProps) {

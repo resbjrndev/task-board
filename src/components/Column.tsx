@@ -29,7 +29,7 @@ interface ColumnProps {
   column: ColumnType              // Column metadata (id, title, position)
   tasks: Task[]                   // Tasks belonging to this column
   boardData: BoardData            // Full board state
-  setBoardData: (data: BoardData) => void // Function to update board
+  setBoardData: (data: BoardData | ((prev: BoardData) => BoardData)) => void // Function to update board
 }
 
 export default function Column({ column, tasks, boardData, setBoardData }: ColumnProps) {
