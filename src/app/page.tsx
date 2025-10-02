@@ -36,13 +36,17 @@ export default function Home() {
     kbApi.boot()
       .then((data) => {
         // Transform API response to match BoardData format
-        const allTasks = Object.values(data.tasksByColumn).flat().map((task: { id: string; title: string; description: string | null; column_id: string; position: number }) => ({
-          id: task.id,
-          title: task.title,
-          description: task.description,
-          columnId: task.column_id,
-          position: task.position,
-        }));
+        type ApiTask = { id: string; title: string; description: string | null; column_id: string; position: number };
+        const allTasks = Object.values(data.tasksByColumn).flat().map((task) => {
+          const apiTask = task as ApiTask;
+          return {
+            id: apiTask.id,
+            title: apiTask.title,
+            description: apiTask.description,
+            columnId: apiTask.column_id,
+            position: apiTask.position,
+          };
+        });
 
         const transformedData: BoardData = {
           columns: data.columns,
