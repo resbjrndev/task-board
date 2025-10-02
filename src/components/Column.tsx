@@ -44,25 +44,43 @@ export default function Column({ column, tasks, boardData, setBoardData }: Colum
   }
 
   return (
-    <div
-      ref={setNodeRef}
-      className={cn(
-        "bg-gray-100 dark:bg-gray-900 rounded-xl w-80 flex-shrink-0 flex flex-col max-h-full transition-colors",
-        isOver && "bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-500"
-      )}
-    >
-      <div className="flex items-center justify-between p-3 border-b border-gray-200 dark:border-gray-800">
-        <div className="flex items-center space-x-2">
-          <h3 className="font-medium text-gray-900 dark:text-white">
+    <div className={`
+      flex flex-col w-80 flex-shrink-0
+      bg-white dark:bg-slate-800
+      rounded-xl
+      shadow-sm hover:shadow-xl
+      border border-slate-200 dark:border-slate-700
+      transition-all duration-300
+      ${isOver ? 'ring-2 ring-violet-400 dark:ring-violet-500 scale-[1.02]' : ''}
+    `}>
+      {/* Column Header */}
+      <div className={`
+        px-4 py-3 rounded-t-xl
+        ${column.id === 'todo' ? 'bg-gradient-to-r from-blue-500 to-cyan-500' : ''}
+        ${column.id === 'in-progress' ? 'bg-gradient-to-r from-amber-500 to-orange-500' : ''}
+        ${column.id === 'done' ? 'bg-gradient-to-r from-emerald-500 to-green-500' : ''}
+      `}>
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold text-white">
             {column.title}
-          </h3>
-          <span className="px-2 py-0.5 text-xs bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full">
+          </h2>
+          <span className="bg-white/20 text-white text-xs font-medium px-2 py-1 rounded-full">
             {tasks.length}
           </span>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-2 space-y-2 scrollbar-thin min-h-[200px]">
+      {/* Tasks Container */}
+      <div
+        ref={setNodeRef}
+        className={`
+          flex-1 p-3 space-y-2
+          min-h-[200px] max-h-[calc(100vh-250px)]
+          overflow-y-auto overflow-x-hidden
+          ${isOver ? 'bg-violet-50 dark:bg-violet-950/20' : ''}
+          transition-colors duration-200
+        `}
+      >
         <SortableContext
           items={tasks.map(t => t.id)}
           strategy={verticalListSortingStrategy}
@@ -81,56 +99,74 @@ export default function Column({ column, tasks, boardData, setBoardData }: Colum
           ))}
         </SortableContext>
 
+        {/* Empty State */}
         {tasks.length === 0 && !isAddingTask && (
-          <p className="text-gray-400 text-sm text-center py-8">
-            Drop tasks here
-          </p>
+          <div className="flex flex-col items-center justify-center py-8 text-slate-400 dark:text-slate-500">
+            <div className="w-16 h-16 mb-3 rounded-full bg-slate-100 dark:bg-slate-700/50 flex items-center justify-center">
+              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+            </div>
+            <p className="text-sm font-medium">No tasks here</p>
+            <p className="text-xs mt-1 text-slate-400 dark:text-slate-600">Drop tasks here</p>
+          </div>
         )}
       </div>
 
-      {isAddingTask ? (
-        <div className="p-2">
-          <input
-            autoFocus
-            type="text"
-            className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-            placeholder="Enter task..."
-            value={newTaskContent}
-            onChange={(e) => setNewTaskContent(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleAddTask()
-              }
-              if (e.key === 'Escape') {
-                setIsAddingTask(false)
-                setNewTaskContent('')
-              }
-            }}
-          />
-          <div className="flex gap-2 mt-2">
-            <button
-              onClick={handleAddTask}
-              className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              Add
-            </button>
-            <button
-              onClick={() => {
-                setIsAddingTask(false)
-                setNewTaskContent('')
+      {/* Add Task Input */}
+      {isAddingTask && (
+        <div className="p-3 animate-slide-up">
+          <div className="bg-slate-50 dark:bg-slate-700/30 rounded-lg p-3">
+            <textarea
+              autoFocus
+              className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-violet-500 dark:focus:ring-violet-400 placeholder-slate-400"
+              placeholder="What needs to be done?"
+              value={newTaskContent}
+              onChange={(e) => setNewTaskContent(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleAddTask();
+                }
+                if (e.key === 'Escape') {
+                  setIsAddingTask(false);
+                  setNewTaskContent('');
+                }
               }}
-              className="px-3 py-1 bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-400 dark:hover:bg-gray-600"
-            >
-              Cancel
-            </button>
+              rows={2}
+            />
+            <div className="flex gap-2 mt-2">
+              <button
+                onClick={handleAddTask}
+                className="flex-1 px-3 py-1.5 bg-violet-500 hover:bg-violet-600 text-white text-sm font-medium rounded-lg transition-colors duration-200"
+              >
+                Add Task
+              </button>
+              <button
+                onClick={() => {
+                  setIsAddingTask(false);
+                  setNewTaskContent('');
+                }}
+                className="px-3 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600 text-sm font-medium rounded-lg transition-colors duration-200"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
-      ) : (
+      )}
+
+      {!isAddingTask && (
         <button
           onClick={() => setIsAddingTask(true)}
-          className="w-full p-3 text-left text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors rounded-b-xl"
+          className="group flex items-center justify-center gap-2 w-full p-3 rounded-b-xl border-t border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all duration-200"
         >
-          + Add a task
+          <svg className="w-5 h-5 text-slate-400 group-hover:text-violet-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          <span className="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-200">
+            Add a task
+          </span>
         </button>
       )}
     </div>

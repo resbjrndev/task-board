@@ -10,45 +10,26 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        board: {
-          bg: '#0d1117',
-          'bg-light': '#f6f8fa',
-        },
-        column: {
-          bg: '#161b22',
-          'bg-light': '#ffffff',
-          border: '#30363d',
-          'border-light': '#d0d7de',
-        },
-        card: {
-          bg: '#0d1117',
-          'bg-light': '#ffffff',
-          hover: '#161b22',
-          'hover-light': '#f6f8fa',
-        },
-        priority: {
-          low: '#2ea043',
-          medium: '#fb8500',
-          high: '#da3633',
-        }
+        border: "hsl(var(--border))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
       },
       animation: {
-        'slide-in': 'slideIn 0.2s ease-out',
-        'fade-in': 'fadeIn 0.2s ease-out',
+        'fade-in': 'fadeIn 0.3s ease-in-out',
+        'slide-up': 'slideUp 0.3s ease-out',
       },
       keyframes: {
-        slideIn: {
-          '0%': { transform: 'translateY(-10px)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
-        },
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(10px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
         },
       },
     },
   },
   plugins: [],
 }
-
 export default config
