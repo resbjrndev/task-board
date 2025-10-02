@@ -1,50 +1,104 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/**
+ * GLOBAL STYLES - Application-wide CSS
+ *
+ * This file contains:
+ * - Tailwind directives
+ * - CSS custom properties (variables)
+ * - Dark mode styles
+ * - Custom scrollbar styling
+ * - Global transitions
+ */
 
+/* Import Tailwind's layers */
+@tailwind base;        /* Reset styles, element defaults */
+@tailwind components;  /* Component classes */
+@tailwind utilities;   /* Utility classes (flex, p-4, etc.) */
+
+/**
+ * BASE LAYER - CSS Custom Properties
+ * Using @layer base ensures these styles have correct specificity
+ */
 @layer base {
+  /**
+   * LIGHT MODE VARIABLES
+   * :root selector = default (light mode)
+   * Values are HSL format: hue saturation lightness
+   * Used with hsl() function in Tailwind config
+   */
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --border: 214.3 31.8% 91.4%;
-    --radius: 0.5rem;
+    --background: 0 0% 100%;        /* Pure white (H:0 S:0% L:100%) */
+    --foreground: 222.2 84% 4.9%;   /* Dark blue-gray for text */
+    --border: 214.3 31.8% 91.4%;    /* Light gray for borders */
+    --radius: 0.5rem;                /* Default border radius (8px) */
   }
 
+  /**
+   * DARK MODE VARIABLES
+   * .dark class applied to <html> element by JavaScript
+   * Overrides light mode values
+   */
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
+    --background: 222.2 84% 4.9%;   /* Dark blue-gray (inverted from light foreground) */
+    --foreground: 210 40% 98%;      /* Off-white for text */
+    --border: 217.2 32.6% 17.5%;    /* Dark gray for borders */
   }
 }
 
+/**
+ * BASE STYLES
+ * Applied globally to all elements
+ */
 @layer base {
+  /**
+   * Universal selector - applies to all elements
+   * Sets default border color using CSS variable
+   */
   * {
     @apply border-border;
   }
+
+  /**
+   * Body element styling
+   * Sets background and text color using CSS variables
+   */
   body {
     @apply bg-background text-foreground;
   }
 }
 
-/* Smooth scrollbar styling */
+/**
+ * CUSTOM SCROLLBAR STYLING
+ * Webkit browsers (Chrome, Safari, Edge)
+ * Creates thin, rounded scrollbars
+ */
+
+/* Scrollbar size */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 6px;   /* Vertical scrollbar */
+  height: 6px;  /* Horizontal scrollbar */
 }
 
+/* Scrollbar track (background) */
 ::-webkit-scrollbar-track {
-  @apply bg-transparent;
+  @apply bg-transparent;  /* Invisible track */
 }
 
+/* Scrollbar thumb (draggable part) */
 ::-webkit-scrollbar-thumb {
   @apply bg-gray-300 dark:bg-gray-700 rounded-full;
 }
 
+/* Scrollbar thumb on hover */
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-600;
+  @apply bg-gray-400 dark:bg-gray-600;  /* Slightly darker on hover */
 }
 
-/* Smooth transitions */
+/**
+ * SMOOTH TRANSITIONS
+ * Applies color transitions to all elements
+ * Makes theme switching and hover states smooth
+ * duration-200 = 200ms (0.2 seconds)
+ */
 * {
   @apply transition-colors duration-200;
 }
