@@ -103,14 +103,14 @@ export default function Board({ boardData, setBoardData }: BoardProps) {
     // If hovering over a column AND it's different from current column
     if (overColumn && activeTask.columnId !== overColumn.id) {
       // Update task's column immediately for visual feedback
-      setBoardData({
-        ...boardData, // Keep everything else the same
-        tasks: boardData.tasks.map(task =>
+      setBoardData((prev: BoardData) => ({
+        ...prev, // Keep everything else the same
+        tasks: prev.tasks.map(task =>
           task.id === activeId
             ? { ...task, columnId: overColumn.id } // Update this task's column
             : task // Keep other tasks unchanged
         )
-      })
+      }))
     }
   }
 
@@ -157,15 +157,20 @@ export default function Board({ boardData, setBoardData }: BoardProps) {
 
     if (movedToNewColumn) {
       // CROSS-COLUMN MOVE
+      // Store previous data for rollback
+      let previousData: BoardData;
+
       // Optimistically update UI
-      const previousData = { ...boardData }
-      setBoardData({
-        ...boardData,
-        tasks: boardData.tasks.map(task =>
-          task.id === activeId
-            ? { ...task, columnId: targetColumnId }
-            : task
-        )
+      setBoardData((prev: BoardData) => {
+        previousData = prev;
+        return {
+          ...prev,
+          tasks: prev.tasks.map(task =>
+            task.id === activeId
+              ? { ...task, columnId: targetColumnId }
+              : task
+          )
+        };
       })
 
       try {
@@ -193,7 +198,7 @@ export default function Board({ boardData, setBoardData }: BoardProps) {
       } catch (err) {
         console.error('Failed to move task:', err)
         // Rollback on error
-        setBoardData(previousData)
+        setBoardData(previousData!)
       }
     } else {
       // SAME-COLUMN REORDER
@@ -212,15 +217,19 @@ export default function Board({ boardData, setBoardData }: BoardProps) {
         const [removed] = reordered.splice(oldIndex, 1)
         reordered.splice(newIndex, 0, removed)
 
-        // Optimistically update UI
-        const previousData = { ...boardData }
-        const updatedTasks = boardData.tasks.map(task => {
-          if (task.columnId !== targetColumnId) return task
-          const newPos = reordered.findIndex(t => t.id === task.id)
-          return { ...task, position: newPos }
-        })
+        // Store previous data for rollback
+        let previousData: BoardData;
 
-        setBoardData({ ...boardData, tasks: updatedTasks })
+        // Optimistically update UI
+        setBoardData((prev: BoardData) => {
+          previousData = prev;
+          const updatedTasks = prev.tasks.map(task => {
+            if (task.columnId !== targetColumnId) return task
+            const newPos = reordered.findIndex(t => t.id === task.id)
+            return { ...task, position: newPos }
+          })
+          return { ...prev, tasks: updatedTasks };
+        })
 
         try {
           // Persist to API
@@ -228,7 +237,7 @@ export default function Board({ boardData, setBoardData }: BoardProps) {
         } catch (err) {
           console.error('Failed to reorder tasks:', err)
           // Rollback on error
-          setBoardData(previousData)
+          setBoardData(previousData!)
         }
       }
     }

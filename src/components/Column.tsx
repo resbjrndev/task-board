@@ -129,17 +129,17 @@ export default function Column({ column, tasks, boardData, setBoardData }: Colum
     `}>
       {/*
         COLUMN HEADER
-        Dynamic gradient based on column ID:
-        - 'todo': Blue gradient
-        - 'in-progress': Orange gradient
-        - 'done': Green gradient
+        Dynamic gradient based on column position:
+        - Position 0: Blue gradient (To Do)
+        - Position 1: Orange gradient (In Progress)
+        - Position 2: Green gradient (Done)
         This provides visual differentiation between columns
       */}
       <div className={`
         px-4 py-3 rounded-t-xl
-        ${column.id === 'todo' ? 'bg-gradient-to-r from-blue-500 to-cyan-500' : ''}
-        ${column.id === 'in-progress' ? 'bg-gradient-to-r from-amber-500 to-orange-500' : ''}
-        ${column.id === 'done' ? 'bg-gradient-to-r from-emerald-500 to-green-500' : ''}
+        ${column.position === 0 ? 'bg-gradient-to-r from-blue-500 to-cyan-500' : ''}
+        ${column.position === 1 ? 'bg-gradient-to-r from-amber-500 to-orange-500' : ''}
+        ${column.position === 2 ? 'bg-gradient-to-r from-emerald-500 to-green-500' : ''}
       `}>
         <div className="flex items-center justify-between">
           {/* Column title */}
