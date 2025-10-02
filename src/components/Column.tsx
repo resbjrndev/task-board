@@ -76,7 +76,7 @@ export default function Column({ column, tasks, boardData, setBoardData }: Colum
 
     // Update UI immediately
     const previousData = { ...boardData };
-    setBoardData(prev => ({
+    setBoardData((prev: BoardData) => ({
       ...prev,
       tasks: [...prev.tasks, tempTask],
     }));
@@ -86,7 +86,7 @@ export default function Column({ column, tasks, boardData, setBoardData }: Colum
       const response = await kbApi.createTask(column.id, title);
 
       // Replace temp task with real task from API
-      setBoardData(prev => ({
+      setBoardData((prev: BoardData) => ({
         ...prev,
         tasks: prev.tasks.map(t =>
           t.id === tempId
@@ -187,7 +187,7 @@ export default function Column({ column, tasks, boardData, setBoardData }: Colum
               onDelete={async () => {
                 // Optimistic delete: remove from UI immediately
                 const previousData = { ...boardData };
-                setBoardData(prev => ({
+                setBoardData((prev: BoardData) => ({
                   ...prev,
                   tasks: prev.tasks.filter(t => t.id !== task.id)
                 }));
