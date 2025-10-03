@@ -110,6 +110,15 @@ export default function Home() {
     return null;
   }
 
+  // Wrapper function to handle the null state
+  const handleSetBoardData = (data: BoardData | ((prev: BoardData) => BoardData)) => {
+    if (typeof data === 'function') {
+      setBoardData(prev => prev ? data(prev) : null);
+    } else {
+      setBoardData(data);
+    }
+  };
+
   // MAIN RENDER
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
@@ -191,7 +200,7 @@ export default function Home() {
           - Pass down setBoardData to allow child to update state
           - This is "lifting state up" pattern in React
         */}
-        <Board boardData={boardData} setBoardData={setBoardData} />
+        <Board boardData={boardData} setBoardData={handleSetBoardData} />
       </main>
     </div>
   );
