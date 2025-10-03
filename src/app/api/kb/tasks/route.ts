@@ -56,6 +56,8 @@ export async function POST(req: NextRequest) {
       [columnId, title, description || null, newPosition]
     );
 
+    console.log('kb: create task', { title, columnId });
+
     return NextResponse.json({ task: taskResult.rows[0] });
   } catch (e: unknown) {
     const error = e as Error;

@@ -82,7 +82,6 @@ export async function GET(req: NextRequest) {
 
     const columns = columnsResult.rows;
 
-    // Fetch all tasks for this board
     const tasksResult = await query<Task>(
       `SELECT t.* FROM kb_tasks t
        JOIN kb_columns c ON t.column_id = c.id
@@ -91,7 +90,6 @@ export async function GET(req: NextRequest) {
       [board.id]
     );
 
-    // Group tasks by column
     const tasksByColumn: Record<string, Task[]> = {};
     columns.forEach(col => {
       tasksByColumn[col.id] = [];
@@ -101,6 +99,8 @@ export async function GET(req: NextRequest) {
         tasksByColumn[task.column_id].push(task);
       }
     });
+
+    console.log('kb: boot ok', { columns: columns.length });
 
     return NextResponse.json({
       board,
